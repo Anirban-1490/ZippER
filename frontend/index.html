@@ -10,11 +10,12 @@
 <body>
     <h1>Zipp-ER</h1>
     <h3>Compress any file or folder to .zip format</h3>
-    <form class="form" >
+    <form class="form" enctype="multipart/form-data">
         <label for="file-hidden">Choose File</label>
         <input type="file" name="uFile" id="file-hidden" multiple>
         <button type="submit" class="btn">Upload</button>
     </form>
     <script src="./index.js" defer></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </body>
 </html>
