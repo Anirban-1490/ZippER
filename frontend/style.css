@@ -45,14 +45,29 @@ label:hover{
    background: rgb(209, 3, 209);
    color: rgb(46, 16, 5);
 }
-button{
+.btn{
     padding: 0.5em 0.8em;
     font-size: 1em;
     border: none;
     background: lightcoral;
     transition: 200ms ;
 }
-button:hover{
+.btn:hover{
    
     background: rgb(252, 170, 170);
+}
+
+.download{
+    padding: 0.5em 0.8em;
+    font-size: 1em;
+    border: none;
+    background: rgb(60, 160, 60);
+    transition: 200ms ;
+    font-weight: 700;
+    display: none;
+}
+
+.download:hover{
+   
+    background: rgb(121, 250, 121);
 }

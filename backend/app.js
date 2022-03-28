@@ -4,10 +4,14 @@ const fileUpload = require("express-fileupload");
 const cors = require("cors");
 const os = require("os")
 const fs = require("fs")
+const del = require("del");
 
+
+app.use(express.json())
+app.use(express.urlencoded())
 app.use(cors())
 
-app.use(fileUpload({
+app.use("/fileupload",fileUpload({
     debug:true,
     safeFileNames:true,
     createParentPath:true,
@@ -21,24 +25,41 @@ app.post("/fileupload",(req,res)=>{
     const file = req.files.uFile;
     const path = os.tmpdir()+"/zipper/"+file.name;
     file.mv(path,(err)=>{
-        if(err) return res.json({status:"error"})
+        if(err) return res.json(err)
 
-        return res.json({status:"success"})
+        return res.status(200).json({status:"success"})
     })
-  
 
     
 })
 
-app.post("/downloadfile",(req,res)=>{
-    const path = os.tmpdir()+"/zipper/"+file.name;
-    const readtst = fs.createReadStream(path)
-    const filename = file.name + ".png";
- res.setHeader('Content-Disposition','attachment: filename="' + filename + '"')
+app.get("/downloadfile", (req,res)=>{
+   console.log(req.query);
+   const filename =  req.query.file ;
+    // const readtst = fs.createReadStream(os.tmpdir()+"/zipper/"+filename)
+    // res.setHeader('Content-Disposition','attachment: filename="' + filename + '"')
+    res.download(os.tmpdir()+"/zipper/"+filename,async(err)=>{
+        if(err) return res.json(err)
 
- 
+        console.log("written");
+        await del(os.tmpdir()+"/zipper",{force:true})
+        console.log("file deleted");
+        // server.close((err)=>{
+        //     if(err) return console.log(err);
 
- readtst.pipe(res);
+        //     console.log("closed");
+        // });
+        // console.log("written");
+    })
+
 })
 
-app.listen(3005,()=>console.log("server is running..."))
+
+const server = app.listen(3005,()=>console.log("server is running..."));
+server.on("close",async()=>{
+    console.log("started");
+   
+})
+server.on("connection",()=>{
+    console.log("gg");
+})
