@@ -3,7 +3,7 @@ const app =express();
 const fileUpload = require("express-fileupload");
 const cors = require("cors");
 const os = require("os")
-const fs = require("fs")
+const compress = require("compress-to-zip");
 const del = require("del");
 
 
@@ -27,29 +27,30 @@ app.post("/fileupload",(req,res)=>{
     file.mv(path,(err)=>{
         if(err) return res.json(err)
 
-        return res.status(200).json({status:"success"})
+        
     })
 
+    console.log("processing....");
+    compress.compressSingleFolder(os.tmpdir()+"/zipper/",os.tmpdir()+"/zipper/"+file.name+".zip",(err)=>{
+        if(err) return console.log(err);
+
+        console.log("processing done!");
+        return res.status(200).json({status:"success"})
+    })
     
 })
 
 app.get("/downloadfile", (req,res)=>{
    console.log(req.query);
    const filename =  req.query.file ;
-    // const readtst = fs.createReadStream(os.tmpdir()+"/zipper/"+filename)
-    // res.setHeader('Content-Disposition','attachment: filename="' + filename + '"')
-    res.download(os.tmpdir()+"/zipper/"+filename,async(err)=>{
+  
+    res.download(os.tmpdir()+"/zipper/"+filename+".zip",async(err)=>{
         if(err) return res.json(err)
 
-        console.log("written");
-        await del(os.tmpdir()+"/zipper",{force:true})
-        console.log("file deleted");
-        // server.close((err)=>{
-        //     if(err) return console.log(err);
+        Promise.resolve(setTimeout(async()=>{
+          await  del(os.tmpdir()+"/zipper",{force:true})
+        },60000)).then(()=> console.log("file deleted"))
 
-        //     console.log("closed");
-        // });
-        // console.log("written");
     })
 
 })
@@ -57,9 +58,6 @@ app.get("/downloadfile", (req,res)=>{
 
 const server = app.listen(3005,()=>console.log("server is running..."));
 server.on("close",async()=>{
-    console.log("started");
+    console.log("server closed");
    
-})
-server.on("connection",()=>{
-    console.log("gg");
 })

@@ -2,6 +2,7 @@ const uploadBtn = document.querySelector(".btn");
 const downloadBtn = document.querySelector(".download");
 const fileIP = document.querySelector("#file-hidden");
 const form = document.querySelector(".form")
+const processText = document.querySelector(".process")
 
 uploadBtn.addEventListener("click", async(e)=>{
     e.preventDefault();
@@ -12,11 +13,14 @@ uploadBtn.addEventListener("click", async(e)=>{
     const formData = new FormData(form);
     // console.log(...formData);
 
+    processText.style.display = "block";
+
    const response = await axios.post("http://localhost:3005/fileupload",formData);
 
    if(response.status != 200){
         return;
    }
+   processText.style.display = "none";
      e.target.style.display = "none"
      downloadBtn.style.display = "block"
 })

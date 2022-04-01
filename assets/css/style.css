@@ -57,6 +57,11 @@ label:hover{
     background: rgb(252, 170, 170);
 }
 
+h4{
+    color: white;
+    display: none;
+}
+
 .download{
     padding: 0.5em 0.8em;
     font-size: 1em;
