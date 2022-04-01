@@ -45,9 +45,9 @@ app.get("/downloadfile", (req,res)=>{
    const filename =  req.query.file ;
   
     res.download(os.tmpdir()+"/zipper/"+filename+".zip",async(err)=>{
-        if(err) return res.json(err)
+        if(err) return console.log(err);
 
-        Promise.resolve(setTimeout(async()=>{
+       return Promise.resolve(setTimeout(async()=>{
           await  del(os.tmpdir()+"/zipper",{force:true})
         },60000)).then(()=> console.log("file deleted"))
 

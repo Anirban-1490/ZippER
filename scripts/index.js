@@ -4,21 +4,25 @@ const fileIP = document.querySelector("#file-hidden");
 const form = document.querySelector(".form")
 const processText = document.querySelector(".process")
 
-uploadBtn.addEventListener("click", async(e)=>{
+uploadBtn.addEventListener("click", async function(e){
     e.preventDefault();
-    // console.log(fileIP.files[0]);
-    if(!fileIP.files){
-        return;
+   
+    console.log(fileIP.files);
+    if(!fileIP.files.length){
+        processText.style.display = "block";
+        return processText.innerHTML = "No files selected"
     }
+    this.style.display = "none"
     const formData = new FormData(form);
-    // console.log(...formData);
-
+   
+    processText.innerHTML = "Processing..."
     processText.style.display = "block";
 
    const response = await axios.post("http://localhost:3005/fileupload",formData);
 
    if(response.status != 200){
-        return;
+    processText.style.display = "block";
+    return processText.innerHTML = "Can't upload right now. please try again later."
    }
    processText.style.display = "none";
      e.target.style.display = "none"
@@ -29,12 +33,7 @@ downloadBtn.addEventListener("click", async(e)=>{
     e.preventDefault();
     console.log(fileIP.files[0]);
     window.open(`http://localhost:3005/downloadfile?file=${fileIP.files[0].name}`)
-//    const response = await axios.get(`http://localhost:3005/downloadfile?file=${fileIP.files[0].name}`);
 
-//    if(response.status != 200){
-//         return;
-//    }
-    
 })
 
 
